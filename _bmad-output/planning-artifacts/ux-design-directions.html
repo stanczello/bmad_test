@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Emotional Aquarium - UX Design Directions</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a2e;
+      --text: #ecf1ff;
+      --muted: #afbbd6;
+      --line: #2a3553;
+      --chip: #1c2640;
+      --ok: #7dd3a9;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "DM Sans", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(1200px 500px at 20% -20%, #25325e 0%, transparent 60%),
+        radial-gradient(1000px 450px at 100% 0%, #3a224c 0%, transparent 55%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.45;
+    }
+
+    .wrap {
+      width: min(1200px, 94vw);
+      margin: 28px auto 40px;
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      background: linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+      backdrop-filter: blur(2px);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+      letter-spacing: 0.01em;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .legend {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 10px;
+      background: var(--chip);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 380px;
+    }
+
+    .card .head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .badge {
+      border: 1px solid var(--line);
+      color: var(--ok);
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .mock {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .meta {
+      padding: 12px 14px 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .meta strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .orb {
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      border-radius: 18px;
+      opacity: 0.9;
+      animation: drift 8s ease-in-out infinite;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.35));
+    }
+
+    .orb:nth-child(2) { animation-delay: -2s; }
+    .orb:nth-child(3) { animation-delay: -4s; }
+    .orb:nth-child(4) { animation-delay: -6s; }
+
+    @keyframes drift {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(8deg); }
+    }
+
+    .overlay {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: min(440px, 86%);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(10, 14, 26, 0.7);
+      backdrop-filter: blur(6px);
+      padding: 14px;
+    }
+
+    .shape-row {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .shape {
+      height: 52px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05));
+    }
+
+    .d1 { background: linear-gradient(145deg, #f5b14e, #9c5d22); }
+    .d2 { background: linear-gradient(145deg, #44dbd7, #1f6a86); }
+    .d3 { background: linear-gradient(145deg, #ff8a62, #91382a); }
+    .d4 { background: linear-gradient(145deg, #f48abd, #8b3f6a); }
+    .d5 { background: linear-gradient(145deg, #8dcf8d, #3e7450); }
+
+    .toolbar {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 12px;
+      background: #17223d;
+      color: #dbe6ff;
+      text-decoration: none;
+      font-size: 13px;
+      display: inline-block;
+    }
+
+    .btn.primary {
+      background: linear-gradient(120deg, #2f68c7, #5b40b3);
+      border-color: transparent;
+    }
+
+    .rec {
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(16, 24, 44, 0.8);
+    }
+
+    .rec p { margin: 0; color: var(--muted); }
+
+    @media (max-width: 700px) {
+      .overlay { width: 92%; }
+      .shape-row { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>Emotional Aquarium - Design Direction Mockups</h1>
+      <p class="subtitle">Six visual directions for comparison, each applying the same UX strategy with different visual weight, density, and mood.</p>
+      <div class="legend">
+        <span class="chip">Submission in under 30 seconds</span>
+        <span class="chip">Belonging without pressure</span>
+        <span class="chip">No surveillance cues</span>
+        <span class="chip">Windows + macOS parity</span>
+      </div>
+      <div class="toolbar">
+        <a class="btn primary" href="#direction-3">Jump to Recommended Direction</a>
+        <a class="btn" href="#all-directions">View All Directions</a>
+      </div>
+    </section>
+
+    <section id="all-directions" class="grid" aria-label="Design directions">
+      <article class="card" id="direction-1">
+        <div class="head"><h2>Direction 1: Velvet Neon</h2><span class="badge">High Contrast</span></div>
+        <div class="mock" style="background: radial-gradient(circle at 20% 20%, #5a1f7a, #0c1124 58%);">
+          <div class="orb d1" style="left:14%; top:56%;"></div><div class="orb d2" style="left:37%; top:26%;"></div><div class="orb d3" style="left:63%; top:60%;"></div><div class="orb d4" style="left:78%; top:30%;"></div>
+          <div class="overlay"><strong>Choose one affirmation</strong><div class="shape-row"><div class="shape d1"></div><div class="shape d2"></div><div class="shape d3"></div><div class="shape d4"></div><div class="shape d5"></div></div></div>
+        </div>
+        <div class="meta"><strong>Use when:</strong> you want bolder emotional impact and stronger visual identity.</div>
+      </article>
+
+      <article class="card" id="direction-2">
+        <div class="head"><h2>Direction 2: Dusty Analog</h2><span class="badge">Retro Soft</span></div>
+        <div class="mock" style="background: radial-gradient(circle at 70% 5%, #4f4a37, #131823 55%);">
+          <div class="orb d5" style="left:16%; top:24%; border-radius: 40px;"></div><div class="orb d4" style="left:34%; top:58%; border-radius: 26px;"></div><div class="orb d1" style="left:64%; top:45%; border-radius: 14px;"></div><div class="orb d2" style="left:82%; top:22%; border-radius: 30px;"></div>
+          <div class="overlay" style="background: rgba(20,16,13,0.68)"><strong>Today's mood token</strong><div class="shape-row"><div class="shape d1"></div><div class="shape d2"></div><div class="shape d3"></div><div class="shape d4"></div><div class="shape d5"></div></div></div>
+        </div>
+        <div class="meta"><strong>Use when:</strong> you want calming warmth and minimal stimulation.</div>
+      </article>
+
+      <article class="card" id="direction-3">
+        <div class="head"><h2>Direction 3: Calm Prism</h2><span class="badge">Recommended</span></div>
+        <div class="mock" style="background: radial-gradient(circle at 50% -10%, #24446d, #0d1326 60%);">
+          <div class="orb d2" style="left:20%; top:56%; border-radius: 12px;"></div><div class="orb d3" style="left:42%; top:24%; border-radius: 20px;"></div><div class="orb d5" style="left:65%; top:58%; border-radius: 14px;"></div><div class="orb d1" style="left:82%; top:31%; border-radius: 34px;"></div>
+          <div class="overlay"><strong>Select one shape for this cycle</strong><div class="shape-row"><div class="shape d1"></div><div class="shape d2"></div><div class="shape d3"></div><div class="shape d4"></div><div class="shape d5"></div></div></div>
+        </div>
+        <div class="meta"><strong>Use when:</strong> you want balanced clarity, strong calmness, and reliable readability on office displays.</div>
+      </article>
+
+      <article class="card" id="direction-4">
+        <div class="head"><h2>Direction 4: Mono Depth</h2><span class="badge">Minimal Extreme</span></div>
+        <div class="mock" style="background: linear-gradient(180deg, #0f1119, #0a0d14);">
+          <div class="orb" style="left:18%; top:52%; background: linear-gradient(145deg,#dddddd,#666);"></div><div class="orb" style="left:38%; top:25%; background: linear-gradient(145deg,#c4c4c4,#5b5b5b);"></div><div class="orb" style="left:64%; top:56%; background: linear-gradient(145deg,#ededed,#727272);"></div><div class="orb" style="left:80%; top:28%; background: linear-gradient(145deg,#d7d7d7,#626262);"></div>
+          <div class="overlay"><strong>Pick your shape</strong><div class="shape-row"><div class="shape" style="background:#4f4f4f"></div><div class="shape" style="background:#7a7a7a"></div><div class="shape" style="background:#949494"></div><div class="shape" style="background:#b1b1b1"></div><div class="shape" style="background:#d4d4d4"></div></div></div>
+        </div>
+        <div class="meta"><strong>Use when:</strong> you need very low visual noise and strict neutrality.</div>
+      </article>
+
+      <article class="card" id="direction-5">
+        <div class="head"><h2>Direction 5: Dawn Aquarium</h2><span class="badge">Bright UI</span></div>
+        <div class="mock" style="background: radial-gradient(circle at 50% -20%, #b2dcff, #4f7898 48%, #1f2f4e 76%);">
+          <div class="orb d4" style="left:14%; top:58%;"></div><div class="orb d1" style="left:34%; top:28%;"></div><div class="orb d2" style="left:61%; top:60%;"></div><div class="orb d5" style="left:81%; top:34%;"></div>
+          <div class="overlay" style="background: rgba(235,245,255,0.78); color:#0f1b33; border-color: rgba(0,0,0,0.18);"><strong>Choose your morning shape</strong><div class="shape-row"><div class="shape d1"></div><div class="shape d2"></div><div class="shape d3"></div><div class="shape d4"></div><div class="shape d5"></div></div></div>
+        </div>
+        <div class="meta"><strong>Use when:</strong> your team prefers brighter interfaces and daylight visibility.</div>
+      </article>
+
+      <article class="card" id="direction-6">
+        <div class="head"><h2>Direction 6: Playful Orbit</h2><span class="badge">Most Expressive</span></div>
+        <div class="mock" style="background: radial-gradient(circle at 30% 0%, #2f2d7a, #110f2b 62%);">
+          <div class="orb d1" style="left:10%; top:26%; border-radius: 100% 50% 60% 80%;"></div><div class="orb d2" style="left:31%; top:57%; border-radius: 70% 80% 45% 90%;"></div><div class="orb d3" style="left:54%; top:31%; border-radius: 80% 40% 80% 50%;"></div><div class="orb d5" style="left:75%; top:55%; border-radius: 45% 90% 60% 75%;"></div>
+          <div class="overlay"><strong>Share one intention</strong><div class="shape-row"><div class="shape d1"></div><div class="shape d2"></div><div class="shape d3"></div><div class="shape d4"></div><div class="shape d5"></div></div></div>
+        </div>
+        <div class="meta"><strong>Use when:</strong> you want a more playful and memorable first impression.</div>
+      </article>
+    </section>
+
+    <section class="rec">
+      <p><strong>Recommended baseline:</strong> Direction 3 (Calm Prism). It best aligns with belonging without pressure, has clear shape legibility, stays calm in screensaver mode, and gives enough contrast for office visibility.</p>
+    </section>
+  </main>
+</body>
+</html>

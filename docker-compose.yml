@@ -1,0 +1,118 @@
+name: emotional-aquarium
+
+services:
+  backend:
+    build:
+      context: ./emotional-aquarium-server
+      dockerfile: Dockerfile
+    container_name: emotional-aquarium-backend
+    env_file:
+      - .env.compose
+    environment:
+      NODE_ENV: ${APP_ENV:-production}
+      HOST: 0.0.0.0
+      PORT: 3000
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:3000/health | grep -q "\"success\":true" || exit 1']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - aquarium-net
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./emotional-aquarium-client
+      dockerfile: Dockerfile
+    container_name: emotional-aquarium-frontend
+    env_file:
+      - .env.compose
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+    ports:
+      - "${FRONTEND_PORT:-4173}:4173"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:4173/ >/dev/null 2>&1 || exit 1']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - aquarium-net
+    restart: unless-stopped
+
+  backend-dev:
+    image: node:20-alpine
+    container_name: emotional-aquarium-backend-dev
+    profiles: ['dev']
+    working_dir: /workspace
+    env_file:
+      - .env.compose
+    environment:
+      NODE_ENV: development
+      HOST: 0.0.0.0
+      PORT: 3000
+    command: sh -c "npm ci && npm run dev"
+    ports:
+      - "${BACKEND_DEV_PORT:-3001}:3000"
+    volumes:
+      - ./emotional-aquarium-server:/workspace
+      - backend_node_modules:/workspace/node_modules
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:3000/health | grep -q "\"success\":true" || exit 1']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - aquarium-net
+
+  server-tests:
+    image: node:20-alpine
+    container_name: emotional-aquarium-server-tests
+    profiles: ['test']
+    working_dir: /workspace
+    env_file:
+      - .env.compose
+    environment:
+      NODE_ENV: test
+    command: sh -c "npm ci && npm run test:coverage"
+    volumes:
+      - ./emotional-aquarium-server:/workspace
+      - backend_node_modules:/workspace/node_modules
+    networks:
+      - aquarium-net
+
+  server-e2e:
+    image: node:20-alpine
+    container_name: emotional-aquarium-server-e2e
+    profiles: ['test']
+    working_dir: /workspace
+    env_file:
+      - .env.compose
+    environment:
+      NODE_ENV: test
+      BASE_URL: http://backend:3000
+    command: sh -c "npm ci && npx playwright install --with-deps chromium && npm run test:e2e"
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - ./emotional-aquarium-server:/workspace
+      - backend_node_modules:/workspace/node_modules
+    networks:
+      - aquarium-net
+
+networks:
+  aquarium-net:
+    driver: bridge
+
+volumes:
+  backend_node_modules:

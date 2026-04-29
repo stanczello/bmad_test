@@ -1,0 +1,59 @@
+name: release-desktop
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/release-desktop.yml'
+      - 'emotional-aquarium-client/**'
+
+jobs:
+  desktop-parity:
+    name: Desktop parity (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            parity_script: parity:win
+            package_script: build:win
+          - os: macos-latest
+            parity_script: parity:mac
+            package_script: build:mac
+
+    defaults:
+      run:
+        working-directory: emotional-aquarium-client
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: emotional-aquarium-client/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Quality checks
+        run: |
+          npm run typecheck
+          npm run lint
+          npm test
+
+      - name: Run packaged parity smoke
+        run: npm run ${{ matrix.parity_script }}
+
+      - name: Build release package
+        run: npm run ${{ matrix.package_script }}
+
+      - name: Upload desktop artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.os }}
+          path: emotional-aquarium-client/dist/**
