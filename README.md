@@ -5,6 +5,22 @@ This repository contains two applications:
 - `emotional-aquarium-server`: Fastify + TypeScript backend API
 - `emotional-aquarium-client`: Electron + React desktop client
 
+## 0) First-time clone / repository hygiene
+
+After cloning (or if any generated files were accidentally committed in the past), run the
+following once to remove tracked artefacts that are now covered by `.gitignore`:
+
+```bash
+# Remove everything from the Git index that .gitignore now excludes,
+# without touching your working-directory files.
+git rm -r --cached .
+git add .
+git commit -m "chore: apply .gitignore – remove generated and secret files from tracking"
+```
+
+> **Never commit** `node_modules/`, `dist/`, `out/`, `coverage/`, `*.sqlite`, or any `.env`
+> file (use the `.env.example` templates instead).
+
 ## 1) Prerequisites
 
 - Node.js 20+
@@ -23,10 +39,17 @@ This repository contains two applications:
 
 ### Step A: Configure environment
 
+> `.env` files are **gitignored** and must be created locally from the provided examples.
+> Never commit real `.env` files.
+
 1. Create backend env file:
-   - copy `emotional-aquarium-server/.env.example` to `emotional-aquarium-server/.env`
+   ```bash
+   cp emotional-aquarium-server/.env.example emotional-aquarium-server/.env
+   ```
 2. Create client env file:
-   - copy `emotional-aquarium-client/.env.example` to `emotional-aquarium-client/.env`
+   ```bash
+   cp emotional-aquarium-client/.env.example emotional-aquarium-client/.env
+   ```
 
 ### Step B: Install dependencies
 

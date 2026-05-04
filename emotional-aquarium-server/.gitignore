@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Test / coverage
+coverage/
+test-results/
+playwright-report/
+
+# Environment (secrets)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Runtime database
+*.sqlite
+*.sqlite3
+*.db
+
+# Caches
+*.tsbuildinfo
+.eslintcache
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
